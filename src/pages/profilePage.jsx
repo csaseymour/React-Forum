@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../features/user'
 import styled from 'styled-components';
 import Snackbar from '../components/snackbar';
 import axios from 'axios'
@@ -65,7 +64,7 @@ function ProfilePage() {
             <Snackbar ref={snackbarRef} />
             <h1>{user.username}</h1>
             <div>
-                {user.avata && <ProfilePicture src={`http://77.100.108.120:8080/avata/${user._id}.png`} />}
+                {user.avata && <ProfilePicture src={`${import.meta.env.VITE_APP_API_URL}/avata/${user._id}.png`} />}
             </div>
             <input type="file" onChange={handleFileSelect} name="file" accept='.png, .jpg'></input>
             <div>
