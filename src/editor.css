@@ -1,0 +1,24 @@
+.ql-toolbar{
+    border-bottom: none !important;
+    border-radius: 5px 5px 0 0;
+    background-color: #272729;
+}
+
+.ql-container{
+    color: white;
+    border-radius: 0 0 5px 5px;
+}
+
+.ql-editor{
+    padding: 1rem;
+    border-radius: 0 0 5px 5px;
+    background-color: #1A1A1B;
+}
+
+.ql-syntax{
+    background-color: #424344 !important;
+}
+
+code{
+    background-color: #424344 !important;
+}
