@@ -195,7 +195,7 @@ function NavBar() {
                         <Logo>{import.meta.env.VITE_APP_NAME}</Logo>
                     </LogoContainer>
                     <DropDown onClick={() => setUserMenuToggle(!userMenuToggle)}>
-                        {user.avata ? <ProfilePicture src={`http://77.100.108.120:8080/avata/${user._id}.png`} /> : <BsPersonSquare style={iconStyle} />}
+                        {user.avata ? <ProfilePicture src={`${import.meta.env.VITE_APP_API_URL}/avata/${user._id}.png`} /> : <BsPersonSquare style={iconStyle} />}
                         <Username>{truncate(user.username, 10)}</Username>
                         {userMenuToggle && <UserMenu toggle={closeMenu} />}
                     </DropDown>
