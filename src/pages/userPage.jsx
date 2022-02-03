@@ -35,7 +35,7 @@ function UserPage() {
         <Container>
             {user && <h1>{user.username}</h1>}
             <div>
-                {user && user.avata ? <ProfilePicture src={`${import.meta.env.VITE_APP_API_URL}/avata/${user._id}.png`} /> : <ProfilePicture src={`http://77.100.108.120:8080/avata/anon.png`} /> }
+                {user && user.avata ? <ProfilePicture src={`${import.meta.env.VITE_APP_API_URL}/avata/${user._id}.png`} /> : <ProfilePicture src={`${import.meta.env.VITE_APP_API_URL}/avata/placeholder.png`} /> }
             </div>
         </Container>
     );
