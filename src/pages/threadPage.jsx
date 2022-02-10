@@ -2,31 +2,11 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Editor from '../components/editor'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import axios from 'axios'
-import { Button } from '../components/globalStyledComponents'
+import * as Gs from '../components/globalStyledComponents'
 import Snackbar from '../components/snackbar'
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-`
-const CommentContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #1A1A1B;
-    padding: 1rem;
-    width: 100%;
-    border: solid 1px rgba(255, 255, 255, 0.1);
-`
-const CommentBoxContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    background-color: #1A1A1B;
-    width: 100%;
-    margin-top: 1rem;
-`
 const CommentBox = styled.textarea`
     background-color: #1A1A1B;
     color: white;
@@ -100,21 +80,21 @@ function ThreadPage() {
     }
 
     const commentBoxArea = 
-    <CommentBoxContainer>
+    <Gs.FlexContainer pad="1rem" bg="#1A1A1B" w="100%" m="1rem 0 0 0">
         <CommentBox onChange={handleComment} placeholder='comment...' value={comment} />
         <div>
-            <Button onClick={postComment}>Post</Button>
+            <Gs.Button onClick={postComment}>Post</Gs.Button>
         </div>
-    </CommentBoxContainer>
+    </Gs.FlexContainer>
 
     return (
-        <Container>
+        <Gs.FlexContainer>
             <Snackbar ref={snackBarRef}/>
             {thread && <h1>{thread.title}</h1>}
             {thread && <Editor content={thread.content} />}
             {user && commentBoxArea}
-            {(thread && thread.comments) && thread.comments.map((comment, i) => <CommentContainer key={i}><CommentUserName>{comment.postedBy.username} - {thread.createdAt}</CommentUserName>{comment.message}</CommentContainer>)}
-        </Container>
+            {(thread && thread.comments) && thread.comments.map((comment, i) => <Gs.FlexContainer pad="1rem" bg="#1A1A1B" w="100%" b="solid 1px rgba(255, 255, 255, 0.1)" key={i}><CommentUserName>{comment.postedBy.username} - {thread.createdAt}</CommentUserName>{comment.message}</Gs.FlexContainer>)}
+        </Gs.FlexContainer>
     );
 }
 

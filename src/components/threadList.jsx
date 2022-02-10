@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Snackbar from './snackbar';
 import axios from 'axios'
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const ThreadContainer = styled.div`
     display: flex;
@@ -31,7 +31,7 @@ const Tag = styled.span`
     background-color: rgba(0,0,0,0.5);
 `
 
-const ThreadList = (props) => {
+const ThreadList = () => {
     const snackbarRef = useRef(null)
     const user = useSelector((state) => state.user.value);
     const navigate = useNavigate();

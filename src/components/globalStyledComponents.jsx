@@ -1,18 +1,18 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
-export const ContainerCol = styled.div`
+export const FlexContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    padding: ${props => props.coco || 0};
-    background-color: black;
-    color: white;
-`
-
-export const ContainerRow = styled.div`
-    display: flex;
-    flex-direction: row;
-    background-color: black;
-    color: white;
+    flex-direction: ${props => props.dir || "column"};
+    padding: ${props => props.pad || "0"};
+    margin: ${props => props.m || "0"};
+    background-color: ${props => props.bg || "none"};
+    border-radius: ${props => props.br || 0};
+    border: ${props => props.b || "none"};
+    color: ${props => props.fg || "white"};
+    width: ${props => props.w || "default"};
+    height: ${props => props.h || "default"};
+    align-items: ${props => props.ai || "stretch"};
+    justify-content: ${props => props.jc || "flex-start"}
 `
 
 export const FormCol = styled.form`

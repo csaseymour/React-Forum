@@ -10,7 +10,7 @@ import ErrorPage from './pages/errorPage'
 import ThreadPage from './pages/threadPage'
 import ProfilePage from './pages/profilePage'
 import UserPage from './pages/userPage'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 const Container = styled.div`
   display: flex;

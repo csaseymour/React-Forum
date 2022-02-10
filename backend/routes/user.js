@@ -122,4 +122,15 @@ router.post('/uploadAvata', upload.single('avata'), (req, res, next) => {
     }
 })
 
+router.post('/updateBio', (req, res) =>{
+    const {bio} = req.body;
+    if(req.user){
+        //we have a user
+        User.findById({_id: req.user._id}).then((usr) => {
+            usr.bio = bio;
+            usr.save().then(()=> res.send(true));
+        });
+    }
+})
+
 module.exports = router

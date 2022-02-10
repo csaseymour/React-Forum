@@ -1,52 +1,29 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import Editor from '../components/editor'
 import ThreadList from '../components/threadList'
-import { Button } from '../components/globalStyledComponents'
+import * as Gs from '../components/globalStyledComponents'
 import { useSelector } from 'react-redux'
-
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-`
-
-const EditorContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #1A1A1B;
-    padding: 0.5rem;
-    width: 100%;
-`
-
-const TopBar = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 1rem 0 1rem 0;
-    align-items: center;
-`
 
 function HomePage() {
     const user = useSelector((state) => state.user.value);
     const [newThread, setNewThread] = useState(false);
-    const [threads, setThreads] = useState();
     const toggleEditor = (e) => {
         if (newThread) {
             e.target.innerHTML = "New Thread";
         } else {
-            e.target.innerHTML = "cancel";
+            e.target.innerHTML = "Cancel";
         }
         setNewThread(!newThread);
     }
 
     return (
-        <Container>
-                <TopBar>
-                    {user && <div><Button br="10px" pad="0.5rem" bg="#1A1A1B" bgh="#272729" bold onClick={toggleEditor}>New Thread</Button></div>}
-                </TopBar>
-                {newThread && <EditorContainer><Editor /></EditorContainer>}
-                <ThreadList threads={threads}/>
-        </Container>
+        <Gs.FlexContainer>
+                <Gs.FlexContainer dir="row" pad="1rem 0 1rem 0" ai="center">
+                    {user && <div><Gs.Button br="10px" pad="0.5rem" bg="#1A1A1B" bgh="#272729" bold onClick={toggleEditor}>New Thread</Gs.Button></div>}
+                </Gs.FlexContainer>
+                {newThread && <Gs.FlexContainer bg="#1A1A1B" pad="0.5rem" w="100%"><Editor /></Gs.FlexContainer>}
+                <ThreadList />
+        </Gs.FlexContainer>
     );
 }
 
