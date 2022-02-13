@@ -19,7 +19,7 @@ function HomePage() {
     return (
         <Gs.FlexContainer>
                 <Gs.FlexContainer dir="row" pad="1rem 0 1rem 0" ai="center">
-                    {user && <div><Gs.Button br="10px" pad="0.5rem" bg="#1A1A1B" bgh="#272729" bold onClick={toggleEditor}>New Thread</Gs.Button></div>}
+                    {user && <div><Gs.Button br="5px" pad="1rem" bg="#1A1A1B" bgh="#272729" bold onClick={toggleEditor}>New Thread</Gs.Button></div>}
                 </Gs.FlexContainer>
                 {newThread && <Gs.FlexContainer bg="#1A1A1B" pad="0.5rem" w="100%"><Editor /></Gs.FlexContainer>}
                 <ThreadList />

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/macro';
-import { InputText, Button } from './globalStyledComponents';
+import * as Gs from './globalStyledComponents';
 import {useDispatch} from 'react-redux'
 import {login} from '../features/user'
 import axios from 'axios'
@@ -18,84 +18,59 @@ const Container = styled.div`
     width: 100vw;
     z-index: 10;
 `
-const HeaderContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    width: 100%;
-    background-color: dodgerblue;
-    color: white;
-    margin-bottom: 1rem;
-`
 
-const FormContainer = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 25vh;
-    /* background-color: #121212; */
-`
-const ButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-`
-
-const InputTextEdit = styled(InputText)`
+const InputTextEdit = styled(Gs.InputText)`
     margin-bottom: 1rem;
 `
 
 function Login(props) {
     const dispatch = useDispatch();
+    const [error, setError] = useState(false);
     const [state, setState] = useState({
         username: "",
         password: ""
     });
-    const [errors, setErrors] = useState([]);
+
     const handleState = (e) =>{
         setState({
             ...state,
             [e.target.name]: e.target.value
         })
     }
+
     const LoginRequest = (e) =>{
         e.preventDefault();
+        setError(false);
         axios({
             method: "POST",
             url: `${import.meta.env.VITE_APP_API_URL}/user/login`,
             data: {username: state.username, password: state.password},
             withCredentials: true
         }).then((data) => {
-            if(data.data.errors){
-                console.log(data.data.errors);
-                setErrors(data.data.errors);
-            }else{
+            if(data.data){
                 dispatch(login(data.data));
                 localStorage.setItem("user", JSON.stringify(data.data));
                 props.toggle();
+            }else{
+                setError(true);
             }
         });
     }
+    
     return (
         <Container>
-            <FormContainer>
-                <HeaderContainer>
+            <Gs.FlexContainer ai="center" jc="center" m="25vh 0 0 0" bg="#121212" pad="1rem" br="5px">
+                <Gs.FlexContainer ai="center" jc="center" pad="1rem" w="100%" bg="dodgerblue" fg="white" m="0 0 1rem 0">
                     <h1>Login</h1>
-                    {errors && errors.map((error, i) => <p style={{color: "black", fontWeight: "bold"}} key={i}>{error}</p>)}
-                </HeaderContainer>
+                    {error && <p>Incorrect Credentials</p>}
+                </Gs.FlexContainer>
                 <InputTextEdit type="text" name="username" value={state.username} onChange={handleState} />
                 <InputTextEdit type="password" name="password" value={state.password} onChange={handleState} />
-                <ButtonContainer>
-                <Button onClick={LoginRequest} pad="1rem" bold>LOGIN</Button>
-                <Button type="button" pad="1rem" bold bg="crimson" bgh="red" onClick={()=> props.toggle()}>CANCLE</Button>
-
-                </ButtonContainer>
-            </FormContainer>
+                <Gs.FlexContainer jc="space-between" dir="row" w="100%" ai="center">
+                    <Gs.Button onClick={LoginRequest} pad="1rem" bold>Login</Gs.Button>
+                    <Gs.Button type="button" pad="1rem" bold bg="crimson" bgh="red" onClick={()=> props.toggle()}>Cancel</Gs.Button>
+                </Gs.FlexContainer>
+            </Gs.FlexContainer>
         </Container>
     )
 }

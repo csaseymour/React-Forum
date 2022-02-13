@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
+const Thread = require('../models/thread')
 const multer = require('multer')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
@@ -19,29 +20,26 @@ var upload = multer({ storage: storage })
 router.post('/login', (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
         if (err) throw err;
-        if (!user) res.send({ errors: ["incorrect credentials!"] });
+        if (!user) res.send(false);
         else {
             req.logIn(user, err => {
                 if (err) throw err;
                 res.send(req.user);
-                console.log(req.user.username + " Has Logged In!");
             })
         }
     })(req, res, next);
 })
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', (req, res) => {
     if (req.user) {
-        console.log(`${req.user.username} Has Logged out!`);
         req.logOut();
-        res.send('logged out');
+        res.send(true);
     } else {
-        res.send("logout requested without user");
+        res.send(false);
     }
 })
 
-router.post('/register', async (req, res, next) => {
-    console.log(req.body);
+router.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
     const errors = [];
     if (!/^[a-zA-Z0-9]+$/.test(username)) {
@@ -72,12 +70,10 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-router.get('/getUser', (req, res, next) => {
+router.get('/getUser', (req, res) => {
     if (req.user) {
-        console.log(req.user.username + " has connected");
         res.send(req.user);
     } else {
-        console.log("annon");
         res.send(false);
     }
 })
@@ -87,9 +83,9 @@ router.post('/getUserByUsername', (req, res) =>{
     if(username){
         User.findOne({username: username}).then((data) => {
             if(data){
-                res.send(data);
+                res.send({_id: data._id, username: data.username, bio: data.bio, avata: data.avata});
             }else{
-                res.send({error: true});
+                res.send(false);
             }
         }).catch(err => console.log(err))
     }
@@ -100,7 +96,7 @@ router.post('/getUserById', (req, res) =>{
     if(id){
         User.findOne({_id: id}).then((data) =>{
             if(data){
-                res.send(data)
+                res.send({_id: data._id, username: data.username, bio: data.bio, avata: data.avata})
             }else{
                 res.send(false)
             }
@@ -108,9 +104,8 @@ router.post('/getUserById', (req, res) =>{
     }
 })
 
-router.post('/uploadAvata', upload.single('avata'), (req, res, next) => {
+router.post('/uploadAvata', upload.single('avata'), (req, res) => {
     if (req.user) {
-        console.log(req.user.username);
         User.findOne({ _id: req.user._id }).then((usr) => {
             if(usr.avata){
                 res.send(true)
@@ -119,17 +114,49 @@ router.post('/uploadAvata', upload.single('avata'), (req, res, next) => {
                 usr.save().then(res.send(true))
             }
         })
+    }else{
+        res.send(false)
     }
 })
 
 router.post('/updateBio', (req, res) =>{
     const {bio} = req.body;
     if(req.user){
-        //we have a user
         User.findById({_id: req.user._id}).then((usr) => {
             usr.bio = bio;
             usr.save().then(()=> res.send(true));
         });
+    }else{
+        res.send(false)
+    }
+})
+
+router.post('/vote', async (req, res) => {
+    const {thread, vote} = req.body;
+    if(req.user){
+        var thread2update = await Thread.findById({_id: thread});
+        let usr = await User.findById({_id: req.user._id})
+        let usrVote = usr.votes.find((el) => el.thread == thread)
+        if(usrVote){
+            if(usrVote.vote != vote){
+                //flip vote
+                voteIndex = usr.votes.findIndex((el) => el.thread == thread)
+                usr.votes[voteIndex].vote = vote
+                await usr.save()
+                vote ? thread2update.points += 2 : thread2update.points += -2
+                thread2update.save()
+            }
+        }else{
+            //no vote found, lets add one.
+            const newVote = {
+                thread: thread,
+                vote:  vote
+            }
+            usr.votes.push(newVote);
+            await usr.save()
+            vote ? thread2update.points += 1 : thread2update.points += -1
+            thread2update.save()
+        }
     }
 })
 

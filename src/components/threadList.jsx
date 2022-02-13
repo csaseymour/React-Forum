@@ -4,10 +4,17 @@ import { useSelector } from 'react-redux';
 import Snackbar from './snackbar';
 import axios from 'axios'
 import styled from 'styled-components/macro';
+import * as Gs from './globalStyledComponents'
+import {
+    BsTrash, 
+    BsFillFileArrowDownFill, 
+    BsFillFileArrowUpFill, 
+    BsFillChatLeftDotsFill
+    } from 'react-icons/bs'
 
 const ThreadContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 0.5rem;
     background-color: #1A1A1B;
     border: 1px solid rgba(0,0,0,0.1);
@@ -31,6 +38,7 @@ const Tag = styled.span`
     background-color: rgba(0,0,0,0.5);
 `
 
+
 const ThreadList = () => {
     const snackbarRef = useRef(null)
     const user = useSelector((state) => state.user.value);
@@ -51,6 +59,7 @@ const ThreadList = () => {
             }
         })
     },[])
+
     const deleteThread = (id) =>{
         axios({
             method: "POST",
@@ -61,10 +70,42 @@ const ThreadList = () => {
             snackbarRef.current.show("post deleted!", true, 3000)
         });
     }
+
+    function vote(id, direction){
+        axios({
+            method: "POST",
+            data: {thread: id, vote: direction},
+            url: `${import.meta.env.VITE_APP_API_URL}/user/vote`,
+            withCredentials: true
+        })
+    }
+
+    function createThreads(){
+        return threads.map((thread, i) => (
+            <ThreadContainer key={i}>
+                <Gs.FlexContainer ai="center" jc="center" style={{borderRight: "solid 1px white"}}>
+                    <Gs.FlexContainer dir="row" >
+                        <BsFillFileArrowDownFill onClick={()=> vote(thread._id, false)} size={"1.5rem"} style={{fill: "crimson"}}/>
+                        <BsFillFileArrowUpFill onClick={()=> vote(thread._id, true)} size={"1.5rem"} style={{fill: "green"}}/>
+                    </Gs.FlexContainer>
+                    <p>{thread.points}</p>
+                </Gs.FlexContainer>
+                <Gs.FlexContainer w="100%">
+                    <ThreadTitle onClick={()=> navigate(`/thread/${thread._id}`)}>{thread.title}</ThreadTitle>
+                    <Gs.FlexContainer dir="row" ai="center" jc="space-between" w="100%" >
+                        <Tag>{thread.tag.name}</Tag>
+                        <p>posted by <a href={`/user/${thread.postedBy._id}`}>{thread.postedBy.username}</a></p> 
+                        <p><BsFillChatLeftDotsFill /> {thread.comments.length}</p> 
+                        <p>{(user._id == thread.postedBy._id || user.authority == 69) && <BsTrash size="1.5rem" color="crimson" style={{cursor: "pointer"}} onClick={()=> deleteThread(thread._id)} />}</p>
+                        </Gs.FlexContainer>
+                </Gs.FlexContainer>
+            </ThreadContainer>
+        ))
+    }
     return (
         <div>
             <Snackbar ref={snackbarRef}/>
-            {threads && threads.map((thread, i) => <ThreadContainer key={i}><ThreadTitle onClick={()=> navigate(`/thread/${thread._id}`)}>{thread.title}</ThreadTitle><p><Tag>{thread.tag.name}</Tag> - posted by <a href={`/user/${thread.postedBy._id}`}>{thread.postedBy.username}</a> {(user._id == thread.postedBy._id || user.authority == 69) && <Tag onClick={()=> deleteThread(thread._id)} style={{backgroundColor: "crimson", cursor: "pointer"}}>delete</Tag>}</p></ThreadContainer>)}
+            {threads && createThreads()}
         </div>
     )
 };

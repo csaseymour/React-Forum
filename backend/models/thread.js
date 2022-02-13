@@ -10,7 +10,8 @@ const threadSchema = new Schema({
         createdAt: Date
     }],
     tag: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'},
-    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    points: {type: Number, default: 0}
 }, {timestamps: true});
 
 const thread = mongoose.model('Thread', threadSchema);

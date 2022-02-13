@@ -12,7 +12,7 @@ export const FlexContainer = styled.div`
     width: ${props => props.w || "default"};
     height: ${props => props.h || "default"};
     align-items: ${props => props.ai || "stretch"};
-    justify-content: ${props => props.jc || "flex-start"}
+    justify-content: ${props => props.jc || "flex-start"};
 `
 
 export const FormCol = styled.form`
