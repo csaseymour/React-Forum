@@ -16,7 +16,8 @@ const ThreadContainer = styled.div`
     display: flex;
     flex-direction: row;
     padding: 0.5rem;
-    background-color: #1A1A1B;
+    background-color: ${props => props.theme.forground};
+    color: ${props => props.theme.text};
     border: 1px solid rgba(0,0,0,0.1);
     transition: 1s;
     &:hover{
@@ -77,6 +78,8 @@ const ThreadList = () => {
             data: {thread: id, vote: direction},
             url: `${import.meta.env.VITE_APP_API_URL}/user/vote`,
             withCredentials: true
+        }).then(()=>{
+            snackbarRef.current.show("voted", true, 3000)
         })
     }
 
@@ -85,8 +88,8 @@ const ThreadList = () => {
             <ThreadContainer key={i}>
                 <Gs.FlexContainer ai="center" jc="center" style={{borderRight: "solid 1px white"}}>
                     <Gs.FlexContainer dir="row" >
-                        <BsFillFileArrowDownFill onClick={()=> vote(thread._id, false)} size={"1.5rem"} style={{fill: "crimson"}}/>
-                        <BsFillFileArrowUpFill onClick={()=> vote(thread._id, true)} size={"1.5rem"} style={{fill: "green"}}/>
+                        <BsFillFileArrowDownFill onClick={()=> vote(thread._id, false)} size={"1.5rem"} />
+                        <BsFillFileArrowUpFill onClick={()=> vote(thread._id, true)} size={"1.5rem"} />
                     </Gs.FlexContainer>
                     <p>{thread.points}</p>
                 </Gs.FlexContainer>

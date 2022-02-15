@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #121212;
+    background-color: ${props => props.theme.forground};
     width: 100%;
     height: 50px;
     position: -webkit-sticky;
@@ -26,7 +26,7 @@ const Container = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: #121212;
+    background-color: ${props => props.theme.forground};
     color: white;
     width: 50%;
     height: 50px;
